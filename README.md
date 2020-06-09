@@ -4,7 +4,7 @@
  * @Autor: hcl
  * @Date: 2020-06-09 15:12:42
  * @LastEditors: hcl
- * @LastEditTime: 2020-06-09 15:49:50
+ * @LastEditTime: 2020-06-09 15:52:27
 --> 
 ## 1、Compile
 
@@ -30,8 +30,8 @@ Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是�
 <div><p><span></span></p></div>
 ```
 
->当解析到开始标签<div>时，就把div推入栈中，然后继续解析，当解析到<p>时，再把p推入栈中，同理，再把span推入栈中，当解析到结>>束标签</span>时，此时栈顶的标签刚好是span的开始标签，那么就用span的开始标签和结束标签构建AST节点，并且从栈中把span的开>>始标签弹出，那么此时栈中的栈顶标签p就是构建好的span的AST节点的父节点，如下图：
-
+>当解析到开始标签div时，就把div推入栈中，然后继续解析，当解析到p时，再把p推入栈中，同理，再把span推入栈中，当解析到结
+>束标签span时，此时栈顶的标签刚好是span的开始标签，那么就用span的开始标签和结束标签构建AST节点，并且从栈中把span的开始标签>弹出，那么此时栈中的栈顶标签p就是构建好的span的AST节点的父节点，如下图：
 
 ![stack](https://vue-js.com/learn-vue/assets/img/7.6ca1dbf0.png)
 
