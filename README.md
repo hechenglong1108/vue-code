@@ -4,7 +4,7 @@
  * @Autor: hcl
  * @Date: 2020-06-09 15:12:42
  * @LastEditors: hcl
- * @LastEditTime: 2020-06-09 15:48:45
+ * @LastEditTime: 2020-06-09 15:49:50
 --> 
 ## 1、Compile
 
@@ -22,8 +22,9 @@
 <div class="box"><p>{{msg}}</p></div>
 ```
 
->如何保证AST节点层级关系
->Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是用来维护AST节点层级的
+如何保证AST节点层级关系
+
+Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是用来维护AST节点层级的
 
 ```javascript
 <div><p><span></span></p></div>
