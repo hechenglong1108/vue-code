@@ -4,7 +4,7 @@
  * @Autor: hcl
  * @Date: 2020-06-09 15:12:42
  * @LastEditors: hcl
- * @LastEditTime: 2020-06-09 15:44:11
+ * @LastEditTime: 2020-06-09 15:46:52
 --> 
 ## 1、Compile
 
@@ -30,7 +30,7 @@
 ```
 
 >当解析到开始标签<div>时，就把div推入栈中，然后继续解析，当解析到<p>时，再把p推入栈中，同理，再把span推入栈中，当解析到结束标签</span>时，此时栈顶的标签刚好是span的开始标签，那么就用span的开始标签和结束标签构建AST节点，并且从栈中把span的开始标签弹出，那么此时栈中的栈顶标签p就是构建好的span的AST节点的父节点，如下图：
-![stack](images/html-stack.png "markdown")
+![stack](https://vue-js.com/learn-vue/assets/img/7.6ca1dbf0.png)
 
 >第二个阶段
 >第二个阶段是对AST进行优化，便利AST，找出静态节点和静态根结点
