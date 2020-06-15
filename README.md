@@ -4,7 +4,7 @@
  * @Autor: hcl
  * @Date: 2020-06-09 15:12:42
  * @LastEditors: hcl
- * @LastEditTime: 2020-06-15 16:10:41
+ * @LastEditTime: 2020-06-15 16:18:13
 --> 
 ## 1、Compile
 
@@ -51,11 +51,42 @@ Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是�
 
 ## 2、virtual dom和diff算法
 
-## 3、nextTick
 
-## 操作DOM
 
-在使用vue.js的时候，有时候因为一些特定的业务场景，不得不去操作DOM，比如这样：
+## 3、Vue.js异步更新DOM策略及nextTick
+
+```html
+<template>
+  <div>
+    <div ref="test">{{test}}</div>
+    <button @click="handleClick">tet</button>
+  </div>
+</template>
+
+```
+
+```javascript
+export default {
+    data () {
+        return {
+            test: 'begin'
+        };
+    },
+    methods () {
+        handleClick () {
+            this.$nextTick(() => {
+                console.log(this.test)
+                console.log(this.$refs.test.innerText);
+            });
+            this.test = 'end';
+            this.$nextTick(() => {
+                console.log(this.$refs.test.innerText)
+            });
+            console.log(this.$refs.test.innerText)
+        }
+    }
+}
+```
 
 
 ## Watcher队列
