@@ -4,7 +4,7 @@
  * @Autor: hcl
  * @Date: 2020-06-09 15:12:42
  * @LastEditors: hcl
- * @LastEditTime: 2020-06-15 16:18:13
+ * @LastEditTime: 2020-06-15 16:24:19
 --> 
 ## 1、Compile
 
@@ -48,12 +48,14 @@ Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是�
 "with(this){return _c('div',{staticClass:"box"},[_c('p',[_v(_s(msg))])])}"
 ```
 
-
-## 2、virtual dom和diff算法
-
+## 2、v-model
 
 
-## 3、Vue.js异步更新DOM策略及nextTick
+## 3、virtual dom和diff算法
+
+
+
+## 4、Vue.js异步更新DOM策略及nextTick
 
 ```html
 <template>
@@ -460,6 +462,6 @@ export default {
 使用Vue.js的global API的$nextTick方法，即可在回调中获取已经更新好的DOM实例了。
 
 
-## 4、v-model
+
 
 
