@@ -4,12 +4,41 @@
  * @Autor: hcl
  * @Date: 2020-06-09 15:12:42
  * @LastEditors: hcl
- * @LastEditTime: 2020-06-15 16:24:19
+ * @LastEditTime: 2020-06-16 17:44:09
 --> 
-## 1、Compile
+## 1、Compile和v-model
 
 
 *Compile分为三个阶段parse，optimize，generate*
+```javascript
+/* @flow */
+import { parse } from './parser/index'
+import { optimize } from './optimizer'
+import { generate } from './codegen/index'
+import { createCompilerCreator } from './create-compiler'
+// `createCompilerCreator` allows creating compilers that use alternative
+// parser/optimizer/codegen, e.g the SSR optimizing compiler.
+// Here we just export a default compiler using the default parts.
+export const createCompiler = createCompilerCreator(function baseCompile (
+  template: string,
+  options: CompilerOptions
+): CompiledResult {
+  // 模板解析阶段：用正则等方式解析 template 模板中的指令、class、style等数据，形成AST
+  const ast = parse(template.trim(), options)
+  if (options.optimize !== false) {
+    // 优化阶段：遍历AST，找出其中的静态节点，并打上标记；
+    optimize(ast, options)
+  }
+  // 代码生成阶段：将AST转换成渲染函数；
+  const code = generate(ast, options)
+  return {
+    ast,
+    render: code.render,
+    staticRenderFns: code.staticRenderFns
+  }
+})
+```
+
 
 > 第一个阶段parse
 > 模板解析阶段：用正则等方式解析 template 模板中的指令、class、style等数据，形成AST
@@ -33,7 +62,7 @@ Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是�
 >当解析到开始标签div时，就把div推入栈中，然后继续解析，当解析到p时，再把p推入栈中，同理，再把span推入栈中，当解析到结
 >束标签span时，此时栈顶的标签刚好是span的开始标签，那么就用span的开始标签和结束标签构建AST节点，并且从栈中把span的开始标签>弹出，那么此时栈中的栈顶标签p就是构建好的span的AST节点的父节点，如下图：
 
-![stack](https://vue-js.com/learn-vue/assets/img/7.6ca1dbf0.png)
+![stack](images/html-stack.png)
 
 
 >第二个阶段
@@ -48,7 +77,8 @@ Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是�
 "with(this){return _c('div',{staticClass:"box"},[_c('p',[_v(_s(msg))])])}"
 ```
 
-## 2、v-model
+
+
 
 
 ## 3、virtual dom和diff算法
@@ -459,7 +489,6 @@ export default {
 }
 ```
 
-使用Vue.js的global API的$nextTick方法，即可在回调中获取已经更新好的DOM实例了。
 
 
 
