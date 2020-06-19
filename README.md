@@ -6,7 +6,7 @@
  * @LastEditors: hcl
  * @LastEditTime: 2020-06-18 14:29:13
 --> 
-## 1、Compile和v-model
+## 1、Compile
 
 
 *Compile分为三个阶段parse，optimize，generate*
@@ -81,7 +81,7 @@ Vue在HTML解析器的开头定义了一个栈stack，这个栈的作用就是�
 
 
 
-## 3、virtual dom和diff算法
+## 2、virtual dom和diff算法
 
 
 VNode树
@@ -558,7 +558,7 @@ newEndIdx => newEndVnode
 
 
 
-## 4、Vue.js异步更新DOM策略及nextTick
+## 3、Vue.js异步更新DOM策略及nextTick
 
 ```html
 <template>
@@ -684,19 +684,10 @@ export const nextTick = (function () {
     }
   }
 
-  // the nextTick behavior leverages the microtask queue, which can be accessed
-  // via either native Promise.then or MutationObserver.
-  // MutationObserver has wider support, however it is seriously bugged in
-  // UIWebView in iOS >= 9.3.3 when triggered in touch event handlers. It
-  // completely stops working after triggering a few times... so, if native
-  // Promise is available, we will use it:
-  /* istanbul ignore if */
-
   /*
     这里解释一下，一共有Promise、MutationObserver以及setTimeout三种尝试得到timerFunc的方法
     优先使用Promise，在Promise不存在的情况下使用MutationObserver，这两个方法都会在microtask中执行，会比setTimeout更早执行，所以优先使用。
     如果上述两种方法都不支持的环境则会使用setTimeout，在task尾部推入这个函数，等待调用执行。
-    参考：https://www.zhihu.com/question/55364497
   */
   if (typeof Promise !== 'undefined' && isNative(Promise)) {
     /*使用Promise*/
@@ -782,26 +773,7 @@ timerFunc是什么？
 优先使用Promise，在Promise不存在的情况下使用MutationObserver，这两个方法的回调函数都会在microtask中执行，它们会比setTimeout更早执行，所以优先使用。
 如果上述两种方法都不支持的环境则会使用setTimeout，在task尾部推入这个函数，等待调用执行。
 
-为什么要优先使用microtask？我在顾轶灵在知乎的回答中学习到：
 
-```
-JS 的 event loop 执行时会区分 task 和 microtask，引擎在每个 task 执行完毕，从队列中取下一个 task 来执行之前，会先执行完所有 microtask 队列中的 microtask。
-setTimeout 回调会被分配到一个新的 task 中执行，而 Promise 的 resolver、MutationObserver 的回调都会被安排到一个新的 microtask 中执行，会比 setTimeout 产生的 task 先执行。
-要创建一个新的 microtask，优先使用 Promise，如果浏览器不支持，再尝试 MutationObserver。
-实在不行，只能用 setTimeout 创建 task 了。
-为啥要用 microtask？
-根据 HTML Standard，在每个 task 运行完以后，UI 都会重渲染，那么在 microtask 中就完成数据更新，当前 task 结束就可以得到最新的 UI 了。
-反之如果新建一个 task 来做数据更新，那么渲染就会进行两次。
-
-```
-
-首先是Promise，Promise.resolve().then()可以在microtask中加入它的回调，
-
-MutationObserver新建一个textNode的DOM对象，用MutationObserver绑定该DOM并指定回调函数，在DOM变化的时候则会触发回调,该回调会进入microtask，即textNode.data = String(counter)时便会加入该回调。
-
-setTimeout是最后的一种备选方案，它会将回调函数加入task中，等到执行。
-
-综上，nextTick的目的就是产生一个回调函数加入task或者microtask中，当前栈执行完以后（可能中间还有别的排在前面的函数）调用该回调函数，起到了异步触发（即下一个tick时触发）的目的。
 
 ## flushSchedulerQueue
 
@@ -815,14 +787,6 @@ function flushSchedulerQueue () {
   flushing = true
   let watcher, id
 
-  // Sort queue before flush.
-  // This ensures that:
-  // 1. Components are updated from parent to child. (because parent is always
-  //    created before the child)
-  // 2. A component's user watchers are run before its render watcher (because
-  //    user watchers are created before the render watcher)
-  // 3. If a component is destroyed during a parent component's watcher run,
-  //    its watchers can be skipped.
   /*
     给queue排序，这样做可以保证：
     1.组件更新的顺序是从父组件到子组件的顺序，因为父组件总是比子组件先创建。
